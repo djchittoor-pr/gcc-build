@@ -1,5 +1,5 @@
 kind: pipeline
-name: Eva GCC Pipeline
+name: ARM GCC+LLD Pipeline
 steps:
   - name: compile
     image: archlinux:base-devel
@@ -7,6 +7,23 @@ steps:
       TIMEOUT: 2h
     commands:
       - curl -fsSL "https://repo.archlinuxcn.org/x86_64/glibc-linux4-2.33-4-x86_64.pkg.tar.zst" | bsdtar -C / -xvf - 
+      - pacman -Syu --needed --noconfirm base base-devel clang cmake git libc++ lld lldb ninja
+      - ./build-gcc.sh -a arm
+      - ./build-lld.sh -a arm
+trigger:
+  event:
+    - custom
+
+---
+kind: pipeline
+name: ARM64 GCC+LLD Pipeline
+steps:
+  - name: compile
+    image: archlinux:base-devel
+    environment:
+      TIMEOUT: 2h
+    commands:
+      - curl -fsSL "https://repo.archlinuxcn.org/x86_64/glibc-linux4-2.33-4-x86_64.pkg.tar.zst" | bsdtar -C / -xvf -
       - pacman -Syu --needed --noconfirm base base-devel clang cmake git libc++ lld lldb ninja
       - ./build-gcc.sh -a arm64
       - ./build-lld.sh -a arm64
