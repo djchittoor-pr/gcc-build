@@ -3,6 +3,8 @@ name: Eva GCC Pipeline
 steps:
   - name: compile
     image: archlinux:base-devel
+    environment:
+      TIMEOUT: 2h
     commands:
       - curl -fsSL "https://repo.archlinuxcn.org/x86_64/glibc-linux4-2.33-4-x86_64.pkg.tar.zst" | bsdtar -C / -xvf - 
       - pacman -Syu --needed --noconfirm base base-devel clang cmake git libc++ lld lldb ninja
